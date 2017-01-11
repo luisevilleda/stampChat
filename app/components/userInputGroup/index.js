@@ -16,18 +16,17 @@ export default class UserInputGroup extends Component {
       <View>
         <Text
           style={{ marginTop: 30 }}
-        >Your first name</Text>
+        >Your name</Text>
         <TextInput
           style={{ height: 30, borderWidth: 0.5, borderColor: '#0f0f0f' }}
+          placeholder={'Firstname'}
           autoCorrect={false}
           onChangeText={text => this.setState({ firstname: text })}
         />
 
-        <Text
-          style={{ marginTop: 8 }}
-        >Your last name</Text>
         <TextInput
           style={{ height: 30, borderWidth: 0.5, borderColor: '#0f0f0f' }}
+          placeholder={'Lastname'}
           autoCorrect={false}
           onChangeText={text => this.setState({ lastname: text })}
         />
@@ -37,6 +36,7 @@ export default class UserInputGroup extends Component {
         >Your email</Text>
         <TextInput
           style={{ height: 30, borderWidth: 0.5, borderColor: '#0f0f0f' }}
+          placeholder={'example@gmail.com'}
           autoCorrect={false}
           autoCapitalize="none"
           onChangeText={text => this.setState({ email: text })}

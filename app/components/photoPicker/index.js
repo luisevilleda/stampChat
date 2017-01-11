@@ -21,7 +21,7 @@ export default class PhotoPicker extends Component {
         skipBackup: true,
       },
     };
-    console.log(ImagePicker)
+    console.log(ImagePicker);
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
@@ -34,10 +34,6 @@ export default class PhotoPicker extends Component {
       } else {
         let source;
 
-        // You can display the image using either:
-        // source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-
-        // Or:
         if (Platform.OS === 'android') {
           source = { uri: response.uri, isStatic: true };
         } else {
@@ -46,6 +42,7 @@ export default class PhotoPicker extends Component {
         this.setState({
           photoUrl: source,
         });
+        this.props.handleSubmit(source);
       }
     });
   }
@@ -56,7 +53,7 @@ export default class PhotoPicker extends Component {
         <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
           <View>
             { this.state.photoUrl === null ? <Text>Select a Photo</Text> :
-            <Image />
+            <Image source={this.state.photoUrl} style={{ height: 150, width: 150 }} />
             }
           </View>
         </TouchableOpacity>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Navigator, View, Text } from 'react-native';
 import UserInputGroup from '../userInputGroup';
+import RecipientInfoGroup from '../recipientInfoGroup';
+import MessageInfoGroup from '../messageInfoGroup';
 import Logo from '../logo';
 import PhotoPicker from '../photoPicker';
 
@@ -26,7 +28,7 @@ export default class App extends Component {
           country: '',
         },
       },
-      photo: 'url',
+      photo: '',
       message: '',
     };
     this.renderScene = this.renderScene.bind(this);
@@ -38,27 +40,72 @@ export default class App extends Component {
       userInfoSubmitted: true,
     }, () => {
       console.log(this.state);
-      navigator.push({ name: 'upload' });
+      navigator.push({ name: 'recipient' });
     });
   }
 
+  handlePhotoUrlSubmit(photoUrl) {
+    this.setState({ photoUrl }, () => {
+      console.log(this.state);
+    });
+  }
+
+  handleRecipientInfoGroupSubmit(recipient, navigator) {
+    this.setState({ recipient }, () => {
+      navigator.push({ name: 'craft' });
+    });
+  }
+
+  handleMessageInfoGroupSubmit(message, navigator) {
+    this.setState({ message }, () => navigator.push({ name: 'send' }));
+  }
+
   renderScene(route, navigator) {
-    if (route.name === 'login') {
+    if (route.name === 'user') {
       return (
         <View>
-          <Logo />
+          {Logo(50, 80)}
+          <Text>Who is the stampChat from?</Text>
           <UserInputGroup
-            handleSubmit={userInfo => this.handleUserInputGroupSubmit(userInfo, navigator)}
+            handleSubmit={userInfo =>
+              this.handleUserInputGroupSubmit(userInfo, navigator)
+            }
           />
         </View>
       );
     }
 
-    if (route.name === 'upload') {
+    if (route.name === 'recipient') {
       return (
         <View>
-          <PhotoPicker />
-          <Text>Upload page under construction</Text>
+          <Text>Who is the stampChat for?</Text>
+          <RecipientInfoGroup
+            handleSubmit={recipientInfo =>
+              this.handleRecipientInfoGroupSubmit(recipientInfo, navigator)
+            }
+          />
+        </View>
+      );
+    }
+
+    if (route.name === 'craft') {
+      return (
+        <View>
+          <Text>Craft your stampChat card!</Text>
+          <PhotoPicker handleSubmit={photoUrl => this.handlePhotoUrlSubmit(photoUrl)} />
+          <MessageInfoGroup
+            handleSubmit={
+              messageInfo => this.handleMessageInfoGroupSubmit(messageInfo, navigator)
+            }
+          />
+        </View>
+      );
+    }
+
+    if (route.name === 'send') {
+      return (
+        <View>
+          <Text>Send screen</Text>
         </View>
       );
     }
@@ -70,7 +117,7 @@ export default class App extends Component {
   render() {
     return (
       <Navigator
-        initialRoute={{ name: 'login' }}
+        initialRoute={{ name: 'user' }}
         renderScene={this.renderScene}
         style={{ padding: 50 }}
       />

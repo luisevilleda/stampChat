@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Image } from 'react-native';
 import logoImage from '../../assets/logo.png';
 
-export default function LogoInstance() {
+export default function LogoInstance(height, width) {
   return (
     <Image
-      style={{ width: 150, height: 110 }}
+      style={{ height: +height, width: +width }}
       source={logoImage}
     />
   );
