@@ -5,6 +5,7 @@ import RecipientInfoGroup from '../recipientInfoGroup';
 import MessageInfoGroup from '../messageInfoGroup';
 import Logo from '../logo';
 import PhotoPicker from '../photoPicker';
+import { createPostcard } from '../../utilities/apiCalls';
 
 export default class App extends Component {
   constructor(props) {
@@ -47,6 +48,7 @@ export default class App extends Component {
   handlePhotoUrlSubmit(photoUrl) {
     this.setState({ photoUrl }, () => {
       console.log(this.state);
+      createPostcard(this.state.photoUrl);
     });
   }
 
