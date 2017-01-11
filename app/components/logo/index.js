@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Image } from 'react-native';
-import logoImage from '../../assets/logo.png';
+import logoImage from '../../assets/logo.jpg';
 
 export default function LogoInstance(height, width) {
   return (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navigator, View, Text } from 'react-native';
+import { Navigator, ScrollView, View, Text, Image } from 'react-native';
 import UserInputGroup from '../userInputGroup';
 import RecipientInfoGroup from '../recipientInfoGroup';
 import MessageInfoGroup from '../messageInfoGroup';
@@ -73,7 +73,11 @@ export default class App extends Component {
   renderScene(route, navigator) {
     if (route.name === 'user') {
       return (
-        <View>
+        <ScrollView>
+        <Image
+          source={{ uri:'https://s3-us-west-2.amazonaws.com/assets.lob.com/psc_c58b91606b032252_thumb_large_1.png?AWSAccessKeyId=AKIAJCFUUY3W2HE7FMBQ&Expires=1486711647&Signature=aLjMvZpJQJojJDNv6%2BE%2FjMyOgos%3D'}}
+          style={{ height: 100, width: 100 }}
+        />
         { InfoVerification(this.state, () => this.handleCorrectInfo(navigator), () => this.handleIncorrectInfo(navigator)) }
 
           { Logo(50, 80) }
@@ -83,7 +87,7 @@ export default class App extends Component {
               this.handleUserInputGroupSubmit(userInfo, navigator)
             }
           />
-        </View>
+        </ScrollView>
       );
     }
 

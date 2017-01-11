@@ -8,16 +8,16 @@ module.exports = {
     const cardBody = {
       description: 'Demo Postcard job',
       to: {
-        name: 'Joe Smith',
-        address_line1: '123 Main Street',
-        address_city: 'Mountain View',
-        address_state: 'CA',
-        address_zip: '94041',
+        name: `${recipient.firstname} ${recipient.lastname}`,
+        address_line1: recipient.address1,
+        address_city: recipient.city,
+        address_state: recipient.state,
+        address_zip: recipient.zip,
       },
-      front: '<html style="padding: 1in; font-size: 50;">Front HTML for {{name}}</html>',
-      back: '<html style="padding: 1in; font-size: 20;">Back HTML for {{name}}</html>',
+      front: '<html style="padding: 1in; font-size: 50;">Somone sent you a stampChat!</html>',
+      back: `<html style="padding: 1in; font-size: 20;">${message}</html>`,
       data: {
-        name: 'Harry',
+        name: recipient.firstname,
       },
     };
 
