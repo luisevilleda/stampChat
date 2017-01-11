@@ -7,7 +7,12 @@ export default class RecipientInfoGroup extends Component {
     this.state = {
       firstname: '',
       lastname: '',
-      email: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: '',
     };
   }
 

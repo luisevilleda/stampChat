@@ -5,6 +5,7 @@ import RecipientInfoGroup from '../recipientInfoGroup';
 import MessageInfoGroup from '../messageInfoGroup';
 import Logo from '../logo';
 import PhotoPicker from '../photoPicker';
+import InfoVerification from '../infoVerification';
 import { createPostcard } from '../../utilities/apiCalls';
 
 export default class App extends Component {
@@ -20,14 +21,12 @@ export default class App extends Component {
       recipient: {
         firstname: '',
         lastname: '',
-        recipientAddress: {
-          address1: '',
-          address2: '',
-          city: '',
-          state: '',
-          zip: '',
-          country: '',
-        },
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: '',
+        country: '',
       },
       photo: '',
       message: '',
@@ -62,11 +61,22 @@ export default class App extends Component {
     this.setState({ message }, () => navigator.push({ name: 'send' }));
   }
 
+  handleCorrectInfo(navigator) {
+    createPostcard(this.state.photoUrl, this.state.user, this.state.recipient, this.state.message);
+
+  }
+
+  handleIncorrectInfo(navigator) {
+    navigator.push({ name: 'user' });
+  }
+
   renderScene(route, navigator) {
     if (route.name === 'user') {
       return (
         <View>
-          {Logo(50, 80)}
+        { InfoVerification(this.state, () => this.handleCorrectInfo(navigator), () => this.handleIncorrectInfo(navigator)) }
+
+          { Logo(50, 80) }
           <Text>Who is the stampChat from?</Text>
           <UserInputGroup
             handleSubmit={userInfo =>
@@ -107,12 +117,12 @@ export default class App extends Component {
     if (route.name === 'send') {
       return (
         <View>
-          <Text>Send screen</Text>
+          { InfoVerification(this.state, () => this.handleCorrectInfo(navigator), () => this.handleIncorrectInfo(navigator)) }
         </View>
       );
     }
     return (
-      <Text>Oops</Text>
+      <Text>Oops, there seems to be a problem!</Text>
     );
   }
 
