@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, Text, TouchableOpacity, Image } from 'react-native';
+import { Button, Platform, View, Text, TouchableOpacity, Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 
 export default class PhotoPicker extends Component {
@@ -21,7 +21,6 @@ export default class PhotoPicker extends Component {
         skipBackup: true,
       },
     };
-    console.log(ImagePicker);
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
@@ -50,13 +49,13 @@ export default class PhotoPicker extends Component {
   render() {
     return (
       <View>
-        <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+        <Button title={'Select a photo'} onPress={this.selectPhotoTapped.bind(this)}>
           <View>
             { this.state.photoUrl === null ? <Text>Select a Photo</Text> :
             <Image source={this.state.photoUrl} style={{ height: 150, width: 150 }} />
             }
           </View>
-        </TouchableOpacity>
+        </Button>
       </View>
     );
   }

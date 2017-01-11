@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "base-64": "^0.1.0",
+    "bluebird": "^3.4.7",
     "express": "^4.14.0",
     "react": "15.4.2",
     "react-native": "0.40.0",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navigator, ScrollView, View, Text, Image } from 'react-native';
+import { Linking, Navigator, ScrollView, Button, View, Text, Image } from 'react-native';
 import UserInputGroup from '../userInputGroup';
 import RecipientInfoGroup from '../recipientInfoGroup';
 import MessageInfoGroup from '../messageInfoGroup';
@@ -14,22 +14,31 @@ export default class App extends Component {
     this.state = {
       userInfoSubmitted: false,
       user: {
-        firstname: '',
-        lastname: '',
-        email: '',
+        firstname: 'Luis',
+        lastname: 'Villeda',
+        email: 'luisevilleda@gmail.com',
       },
       recipient: {
-        firstname: '',
-        lastname: '',
-        address1: '',
-        address2: '',
-        city: '',
-        state: '',
-        zip: '',
-        country: '',
+        firstname: 'Aaron',
+        lastname: 'Abbott',
+        address1: '1234 Sample Rd',
+        city: 'Larkspur',
+        state: 'CA',
+        zip: '94939',
+        country: 'USA',
       },
-      photo: '',
-      message: '',
+      photo: 'url',
+      card: {
+        front: 'Wish you were here!',
+        back: 'I\'m really liking Mill Valley. Next time you must come with me!',
+      },
+      lobCard: {
+        pdf: '',
+        front: '',
+        back: '',
+        carrier: '',
+        expectedDeliveryDate: '',
+      },
     };
     this.renderScene = this.renderScene.bind(this);
   }
@@ -57,13 +66,42 @@ export default class App extends Component {
     });
   }
 
-  handleMessageInfoGroupSubmit(message, navigator) {
-    this.setState({ message }, () => navigator.push({ name: 'send' }));
+  handleMessageInfoGroupSubmit(card, navigator) {
+    this.setState({ card }, () => navigator.push({ name: 'send' }));
   }
 
   handleCorrectInfo(navigator) {
-    createPostcard(this.state.photoUrl, this.state.user, this.state.recipient, this.state.message);
+    createPostcard(this.state.photoUrl, this.state.user, this.state.recipient, this.state.card.front, this.state.card.back)
+    .then((res) => {
+      console.log(res);
 
+      const toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        console.log('BLOB ', blob);
+          var reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+      }));
+
+      toDataURL(res.thumbnails[0].small)
+        .then(result => console.log('AARON: ', result))
+        .catch(error => console.error(error));
+
+
+      this.setState({
+        lobCard: {
+          pdf: res.url,
+          front: res.thumbnails[0].small,
+          back: res.thumbnails[1].small,
+          carrier: res.carrier,
+          expectedDeliveryDate: res.expected_delivery_date,
+        },
+      }, () => {
+        return navigator.push({ name: 'response' });
+      });
+    });
   }
 
   handleIncorrectInfo(navigator) {
@@ -74,13 +112,7 @@ export default class App extends Component {
     if (route.name === 'user') {
       return (
         <ScrollView>
-        <Image
-          source={{ uri:'https://s3-us-west-2.amazonaws.com/assets.lob.com/psc_c58b91606b032252_thumb_large_1.png?AWSAccessKeyId=AKIAJCFUUY3W2HE7FMBQ&Expires=1486711647&Signature=aLjMvZpJQJojJDNv6%2BE%2FjMyOgos%3D'}}
-          style={{ height: 100, width: 100 }}
-        />
-        { InfoVerification(this.state, () => this.handleCorrectInfo(navigator), () => this.handleIncorrectInfo(navigator)) }
-
-          { Logo(50, 80) }
+          { Logo(70, 100) }
           <Text>Who is the stampChat from?</Text>
           <UserInputGroup
             handleSubmit={userInfo =>
@@ -94,6 +126,7 @@ export default class App extends Component {
     if (route.name === 'recipient') {
       return (
         <View>
+          { Logo(70, 100) }
           <Text>Who is the stampChat for?</Text>
           <RecipientInfoGroup
             handleSubmit={recipientInfo =>
@@ -107,6 +140,7 @@ export default class App extends Component {
     if (route.name === 'craft') {
       return (
         <View>
+          { Logo(70, 100) }
           <Text>Craft your stampChat card!</Text>
           <PhotoPicker handleSubmit={photoUrl => this.handlePhotoUrlSubmit(photoUrl)} />
           <MessageInfoGroup
@@ -125,6 +159,24 @@ export default class App extends Component {
         </View>
       );
     }
+
+    if (route.name === 'response') {
+      return (
+        <View>
+          {Linking.openURL(this.state.lobCard.pdf)
+            .catch(err => console.error('An error occurred', err))
+          }
+          <Text>Here is you postcard!</Text>
+          <Button onPress={() => {
+            Linking.openURL(this.state.lobCard.pdf)
+            .catch(err => console.error('An error occurred', err));
+            }}
+            title={'View postcard'}
+          />
+        </View>
+      );
+    }
+
     return (
       <Text>Oops, there seems to be a problem!</Text>
     );
